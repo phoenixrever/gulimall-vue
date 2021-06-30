@@ -4,6 +4,7 @@
     node-key="catId"
     :props="defaultProps"
     @node-click="handleNodeClick"
+    :highlight-current=true
     ref="categoryTree"
   >
     ></el-tree
@@ -37,8 +38,7 @@ export default {
       });
     },
     handleNodeClick(data,Node,self) {
-      console.log(Node,self)
-      this.$emit("getCatId",data.catId)
+      this.$emit("treenodeclick",data,Node,self)
     }
   }
 };

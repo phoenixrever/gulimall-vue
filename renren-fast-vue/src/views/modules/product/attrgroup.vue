@@ -1,8 +1,11 @@
 <template>
   <el-row :gutter="20">
-    <el-col :span="6"><category @getCatId="getCatId"></category></el-col>
-    <el-col :span="18"
-      ><div class="mod-config">
+    <el-col :span="6"
+      ><category @treenodeclick="treenodeclick"></category
+    ></el-col>
+    <el-col :span="18">
+      <div class="title">{{title}}</div>
+      <div class="mod-config">
         <el-form
           :inline="true"
           :model="dataForm"
@@ -17,6 +20,9 @@
           </el-form-item>
           <el-form-item>
             <el-button @click="getDataList()">查询</el-button>
+            <el-button type="success" @click="getAllDataList()"
+              >查询全部</el-button
+            >
             <el-button
               v-if="isAuth('product:attrgroup:save')"
               type="primary"
@@ -82,7 +88,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="catelogId"
+            prop="catalogId"
             header-align="center"
             align="center"
             label="所属分类id"
@@ -142,6 +148,9 @@ export default {
   },
   data() {
     return {
+      catId: 0,
+      title:"全部分类",
+      titlepath: [],
       dataForm: {
         key: ""
       },
@@ -162,7 +171,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/product/attrgroup/list"),
+        url: this.$http.adornUrl(`/product/attrgroup/list/${this.catId}`),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -170,6 +179,7 @@ export default {
           key: this.dataForm.key
         })
       }).then(({ data }) => {
+        console.log(data);
         if (data && data.code === 0) {
           this.dataList = data.page.list;
           this.totalPage = data.page.totalCount;
@@ -179,6 +189,11 @@ export default {
         }
         this.dataListLoading = false;
       });
+    },
+    getAllDataList() {
+      this.title="全部"
+      this.catId = 0;
+      this.getDataList();
     },
     // 每页数
     sizeChangeHandle(val) {
@@ -238,11 +253,33 @@ export default {
         });
       });
     },
-    getCatId(catId){
-        console.log(catId)
+    getParantLabel(Node) {
+      this.titlepath.push(Node.label);
+      if (Node.parent && Node.parent.label !==undefined) {
+        this.getParantLabel(Node.parent, this.titlepath);
+      }
+    },
+    //感知树节点被点击
+    treenodeclick(data, Node, self) {
+      if (Node.level === 3) {
+           this.titlepath = [];
+        this.getParantLabel(Node, this.titlepath);
+        // console.log(this.titlepath.reverse());
+        const arr=this.titlepath.reverse().join("/");
+        this.title=arr
+        this.catId = data.catId;
+        this.getDataList(); //重新查询
+      }
     }
   }
 };
 </script>
 
-<style></style>
+<style  scoped>
+  .title{
+    padding: 5px 0;
+    font-size: 15px;
+    border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+  }
+</style>>
