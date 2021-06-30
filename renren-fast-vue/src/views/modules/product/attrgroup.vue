@@ -4,7 +4,7 @@
       ><category @treenodeclick="treenodeclick"></category
     ></el-col>
     <el-col :span="18">
-      <div class="title">{{title}}</div>
+      <div class="title">{{ title }}</div>
       <div class="mod-config">
         <el-form
           :inline="true"
@@ -105,6 +105,12 @@
               <el-button
                 type="text"
                 size="small"
+                @click="relationHandle(scope.row.attrGroupId)"
+                >关联</el-button
+              >
+              <el-button
+                type="text"
+                size="small"
                 @click="addOrUpdateHandle(scope.row.attrGroupId)"
                 >修改</el-button
               >
@@ -132,24 +138,32 @@
           v-if="addOrUpdateVisible"
           ref="addOrUpdate"
           @refreshDataList="getDataList"
-        ></add-or-update></div
+        ></add-or-update>
+        <!-- 修改关联关系 -->
+        <relation-update
+          v-if="relationVisible"
+          ref="relationUpdate"
+          @refreshData="getDataList"
+        ></relation-update></div
     ></el-col>
   </el-row>
 </template>
 
 <script>
-import Category from "@/views/modules/category/category.vue";
+import Category from "@/views/modules/common/category.vue";
 import AddOrUpdate from "./attrgroup-add-or-update";
+import RelationUpdate from "./attr-group-relation";
 
 export default {
   components: {
     Category,
-    AddOrUpdate
+    AddOrUpdate,
+    RelationUpdate
   },
   data() {
     return {
       catId: 0,
-      title:"全部分类",
+      title: "全部分类",
       titlepath: [],
       dataForm: {
         key: ""
@@ -160,7 +174,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      relationVisible: false
     };
   },
   activated() {
@@ -190,8 +205,15 @@ export default {
         this.dataListLoading = false;
       });
     },
+    //处理分组与属性的关联
+    relationHandle(groupId) {
+      this.relationVisible = true;
+      this.$nextTick(() => {
+        this.$refs.relationUpdate.init(groupId);
+      });
+    },
     getAllDataList() {
-      this.title="全部"
+      this.title = "全部";
       this.catId = 0;
       this.getDataList();
     },
@@ -255,18 +277,18 @@ export default {
     },
     getParantLabel(Node) {
       this.titlepath.push(Node.label);
-      if (Node.parent && Node.parent.label !==undefined) {
+      if (Node.parent && Node.parent.label !== undefined) {
         this.getParantLabel(Node.parent, this.titlepath);
       }
     },
     //感知树节点被点击
     treenodeclick(data, Node, self) {
       if (Node.level === 3) {
-           this.titlepath = [];
+        this.titlepath = [];
         this.getParantLabel(Node, this.titlepath);
         // console.log(this.titlepath.reverse());
-        const arr=this.titlepath.reverse().join("/");
-        this.title=arr
+        const arr = this.titlepath.reverse().join("/");
+        this.title = arr;
         this.catId = data.catId;
         this.getDataList(); //重新查询
       }
@@ -275,11 +297,11 @@ export default {
 };
 </script>
 
-<style  scoped>
-  .title{
-    padding: 5px 0;
-    font-size: 15px;
-    border-bottom: 1px solid gray;
-    margin-bottom: 20px;
-  }
-</style>>
+<style scoped>
+.title {
+  padding: 5px 0;
+  font-size: 15px;
+  border-bottom: 1px solid gray;
+  margin-bottom: 20px;
+}</style
+>>
