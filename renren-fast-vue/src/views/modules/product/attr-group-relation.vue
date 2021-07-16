@@ -1,11 +1,28 @@
 <template>
   <div>
-    <el-dialog :close-on-click-modal="false" :visible.sync="visible" @closed="dialogClose">
-      <el-dialog width="40%" title="选择属性" :visible.sync="innerVisible" append-to-body>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="visible"
+      @closed="dialogClose"
+    >
+      <el-dialog
+        width="40%"
+        title="选择属性"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
         <div>
-          <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+          <el-form
+            :inline="true"
+            :model="dataForm"
+            @keyup.enter.native="getDataList()"
+          >
             <el-form-item>
-              <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+              <el-input
+                v-model="dataForm.key"
+                placeholder="参数名"
+                clearable
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button @click="getDataList()">查询</el-button>
@@ -18,11 +35,35 @@
             @selection-change="innerSelectionChangeHandle"
             style="width: 100%;"
           >
-            <el-table-column type="selection" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="attrId" header-align="center" align="center" label="属性id"></el-table-column>
-            <el-table-column prop="attrName" header-align="center" align="center" label="属性名"></el-table-column>
-            <el-table-column prop="icon" header-align="center" align="center" label="属性图标"></el-table-column>
-            <el-table-column prop="valueSelect" header-align="center" align="center" label="可选值列表"></el-table-column>
+            <el-table-column
+              type="selection"
+              header-align="center"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="attrId"
+              header-align="center"
+              align="center"
+              label="属性id"
+            ></el-table-column>
+            <el-table-column
+              prop="attrName"
+              header-align="center"
+              align="center"
+              label="属性名"
+            ></el-table-column>
+            <el-table-column
+              prop="icon"
+              header-align="center"
+              align="center"
+              label="属性图标"
+            ></el-table-column>
+            <el-table-column
+              prop="valueSelect"
+              header-align="center"
+              align="center"
+              label="可选值列表"
+            ></el-table-column>
           </el-table>
           <el-pagination
             @size-change="sizeChangeHandle"
@@ -36,17 +77,22 @@
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="innerVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitAddRealtion">确认新增</el-button>
+          <el-button type="primary" @click="submitAddRealtion"
+            >确认新增</el-button
+          >
         </div>
       </el-dialog>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" @click="addRelation">新建关联</el-button>
-          <el-button
-            type="danger"
-            @click="batchDeleteRelation"
-            :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button>
+          <div class="action">
+            <el-button type="primary" @click="addRelation">新建关联</el-button>
+            <el-button
+              type="danger"
+              @click="batchDeleteRelation"
+              :disabled="dataListSelections.length <= 0"
+              >批量删除</el-button
+            >
+          </div>
           <!--  -->
           <el-table
             :data="relationAttrs"
@@ -54,25 +100,45 @@
             @selection-change="selectionChangeHandle"
             border
           >
-            <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
+            <el-table-column
+              type="selection"
+              header-align="center"
+              align="center"
+              width="50"
+            ></el-table-column>
             <el-table-column prop="attrId" label="#"></el-table-column>
             <el-table-column prop="attrName" label="属性名"></el-table-column>
             <el-table-column prop="valueSelect" label="可选值">
               <template slot-scope="scope">
                 <el-tooltip placement="top">
                   <div slot="content">
-                    <span v-for="(i,index) in scope.row.valueSelect.split(';')" :key="index">
-                      {{i}}
+                    <span
+                      v-for="(i, index) in scope.row.valueSelect.split(';')"
+                      :key="index"
+                    >
+                      {{ i }}
                       <br />
                     </span>
                   </div>
-                  <el-tag>{{scope.row.valueSelect.split(";")[0]+" ..."}}</el-tag>
+                  <el-tag>{{
+                    scope.row.valueSelect.split(";")[0] + " ..."
+                  }}</el-tag>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" header-align="center" align="center" label="操作">
+            <el-table-column
+              fixed="right"
+              header-align="center"
+              align="center"
+              label="操作"
+            >
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="relationRemove(scope.row.attrId)">移除</el-button>
+                <el-button
+                  type="text"
+                  size="small"
+                  @click="relationRemove(scope.row.attrId)"
+                  >移除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -193,7 +259,11 @@ export default {
         method: "get",
         params: this.$http.adornParams({})
       }).then(({ data }) => {
-        this.relationAttrs = data.data;
+        if (data.code == 0) {
+          this.relationAttrs = data.data;
+        } else {
+          this.relationAttrs = [];
+        }
       });
     },
     dialogClose() {},
@@ -237,5 +307,8 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style scoped>
+.action {
+  margin-bottom: 20px;
+}
 </style>

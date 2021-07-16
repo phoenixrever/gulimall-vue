@@ -258,14 +258,16 @@ export default {
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
+              this.$emit("refreshDataList");
+              this.visible = false;
               this.$message({
-                message: "操作成功",
+                message: "操作成功1111",
                 type: "success",
                 duration: 1500,
-                onClose: () => {
-                  this.visible = false;
-                  this.$emit("refreshDataList");
-                }
+                // onClose: () => {
+                //   this.$emit("refreshDataList");
+                //   this.visible = false;
+                // }
               });
             } else {
               this.$message.error(data.msg);

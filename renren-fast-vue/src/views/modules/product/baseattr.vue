@@ -1,13 +1,13 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="6">
-      <category @tree-node-click="treenodeclick"></category>
+      <category @treenodeclick="treenodeclick"></category>
     </el-col>
     <el-col :span="18">
       <div class="mod-config">
         <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
           <el-form-item>
-            <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+            <el-input v-model="dataForm.key" placeholder="参数名" clearable @clear="clearForm"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="getDataList()">查询</el-button>
@@ -70,7 +70,7 @@
               <i class="el-icon-error" v-else></i>
             </template>
           </el-table-column>
-          <el-table-column prop="catelogName" header-align="center" align="center" label="所属分类"></el-table-column>
+          <el-table-column prop="catalogName" header-align="center" align="center" label="所属分类"></el-table-column>
           <el-table-column
             v-if="attrtype == 1"
             prop="groupName"
@@ -153,8 +153,8 @@ export default {
   },
   methods: {
     //感知树节点被点击
-    treenodeclick(data, node, component) {
-      if (node.level == 3) {
+    treenodeclick(data, Node, component) {
+      if (Node.level == 3) {
         this.catId = data.catId;
         this.getDataList(); //重新查询
       }
@@ -162,6 +162,9 @@ export default {
     getAllDataList(){
       this.catId = 0;
       this.getDataList();
+    },
+    clearForm(){
+      this.getDataList()
     },
     // 获取数据列表
     getDataList() {

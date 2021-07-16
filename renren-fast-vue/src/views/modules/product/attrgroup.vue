@@ -16,6 +16,7 @@
               v-model="dataForm.key"
               placeholder="参数名"
               clearable
+              @clear="clearForm"
             ></el-input>
           </el-form-item>
           <el-form-item>
@@ -182,6 +183,9 @@ export default {
     this.getDataList();
   },
   methods: {
+    clearForm(){
+      this.getDataList()
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

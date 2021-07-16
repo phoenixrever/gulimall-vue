@@ -245,7 +245,7 @@ export default {
     deleteCataRelationHandle(id, brandId) {
       console.log("delete",id,brandId)
       this.$http({
-        url: this.$http.adornUrl("/product/catagorybrandrelation/delete"),
+        url: this.$http.adornUrl("/product/categorybrandrelation/delete"),
         method: "post",
         data: this.$http.adornData([id], false)
       }).then(({ data }) => {
@@ -259,7 +259,7 @@ export default {
     },
     getCataRelation() {
       this.$http({
-        url: this.$http.adornUrl("/product/catagorybrandrelation/catalog/list"),
+        url: this.$http.adornUrl("/product/categorybrandrelation/catalog/list"),
         method: "get",
         params: this.$http.adornParams({
           brandId: this.brandId
