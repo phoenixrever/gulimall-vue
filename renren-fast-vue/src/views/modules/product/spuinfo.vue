@@ -32,6 +32,10 @@
             @click="productUp(scope.row.id)"
           >上架</el-button>
           <el-button type="text" size="small" @click="attrUpdateShow(scope.row)">规格</el-button>
+          <attr-update
+          v-if="attrUpdateVisible"
+          ref="attrUpdate"
+         ></attr-update>
         </template>
       </el-table-column>
     </el-table>
@@ -49,6 +53,7 @@
 </template>
 
 <script>
+import AttrUpdate from './attr-update.vue';
 export default {
   data() {
     return {
@@ -60,7 +65,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      attrUpdateVisible:false
     };
   },
   props: {
@@ -69,7 +75,7 @@ export default {
       default: 0
     }
   },
-  components: {},
+  components: {AttrUpdate},
   activated() {
     this.getDataList();
   },
@@ -95,9 +101,13 @@ export default {
     },
     attrUpdateShow(row) {
       console.log(row);
-      this.$router.push({
-        path: "/product-attrupdate",
-        query: { spuId: row.id, catalogId: row.catalogId }
+      // this.$router.push({
+      //   path: "/product-attrupdate",
+      //   query: { spuId: row.id, catalogId: row.catalogId }
+      // });
+      this.attrUpdateVisible=true;
+         this.$nextTick(() => {
+        this.$refs.attrUpdate.init(row.id,row.catalogId);
       });
     },
     // 获取数据列表

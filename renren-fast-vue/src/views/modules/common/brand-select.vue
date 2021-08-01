@@ -51,7 +51,9 @@ export default {
           catId: this.catId
         })
       }).then(({ data }) => {
-        this.brands = data.data;
+        if(data && data.code==0){
+          this.brands = data.data;
+        }
       });
     }
   },

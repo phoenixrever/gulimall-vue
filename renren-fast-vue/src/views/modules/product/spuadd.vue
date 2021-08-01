@@ -10,9 +10,14 @@
           <el-step title="保存完成"></el-step>
         </el-steps>
       </el-col>
-      <el-col :span="24" v-show="step==0">
+      <el-col :span="24" v-show="step == 0">
         <el-card class="box-card" style="width:80%;margin:20px auto">
-          <el-form ref="spuBaseForm" :model="spu" label-width="120px" :rules="spuBaseInfoRules">
+          <el-form
+            ref="spuBaseForm"
+            :model="spu"
+            label-width="120px"
+            :rules="spuBaseInfoRules"
+          >
             <el-form-item label="商品名称" prop="spuName">
               <el-input v-model="spu.spuName"></el-input>
             </el-form-item>
@@ -26,7 +31,12 @@
               <brand-select></brand-select>
             </el-form-item>
             <el-form-item label="商品重量(Kg)" prop="weight">
-              <el-input-number v-model.number="spu.weight" :min="0" :precision="3" :step="0.1"></el-input-number>
+              <el-input-number
+                v-model.number="spu.weight"
+                :min="0"
+                :precision="3"
+                :step="0.1"
+              ></el-input-number>
             </el-form-item>
             <el-form-item label="设置积分" prop="bounds">
               <label>金币</label>
@@ -45,35 +55,39 @@
                 :min="0"
                 controls-position="right"
               >
-                <template slot="prepend">成长值</template>
+                <template slot="prepend"
+                  >成长值</template
+                >
               </el-input-number>
             </el-form-item>
-            <el-form-item label="商品介绍" prop="decript">
-              <multi-upload v-model="spu.decript"></multi-upload>
+            <el-form-item label="商品介绍" prop="descript">
+              <multi-upload v-model="spu.descript"></multi-upload>
             </el-form-item>
 
             <el-form-item label="商品图集" prop="images">
               <multi-upload v-model="spu.images"></multi-upload>
             </el-form-item>
             <el-form-item>
-              <el-button type="success" @click="collectSpuBaseInfo">下一步：设置基本参数</el-button>
+              <el-button type="success" @click="collectSpuBaseInfo"
+                >下一步：设置基本参数</el-button
+              >
             </el-form-item>
           </el-form>
         </el-card>
       </el-col>
-      <el-col :span="24" v-show="step==1">
+      <el-col :span="24" v-show="step == 1">
         <el-card class="box-card" style="width:80%;margin:20px auto">
           <el-tabs tab-position="left" style="width:98%">
             <el-tab-pane
               :label="group.attrGroupName"
-              v-for="(group,gidx) in dataResp.attrGroups"
+              v-for="(group, gidx) in dataResp.attrGroups"
               :key="group.attrGroupId"
             >
               <!-- 遍历属性,每个tab-pane对应一个表单，每个属性是一个表单项  spu.baseAttrs[0] = [{attrId:xx,val:}]-->
               <el-form ref="form" :model="spu">
                 <el-form-item
                   :label="attr.attrName"
-                  v-for="(attr,aidx) in group.attrs"
+                  v-for="(attr, aidx) in group.attrs"
                   :key="attr.attrId"
                 >
                   <el-input
@@ -90,7 +104,7 @@
                     placeholder="请选择或输入值"
                   >
                     <el-option
-                      v-for="(val,vidx) in attr.valueSelect.split(';')"
+                      v-for="(val, vidx) in attr.valueSelect.split(';')"
                       :key="vidx"
                       :label="val"
                       :value="val"
@@ -100,18 +114,21 @@
                     v-model="dataResp.baseAttrs[gidx][aidx].showDesc"
                     :true-label="1"
                     :false-label="0"
-                  >快速展示</el-checkbox>
+                    >快速展示</el-checkbox
+                  >
                 </el-form-item>
               </el-form>
             </el-tab-pane>
           </el-tabs>
           <div style="margin:auto">
             <el-button type="primary" @click="step = 0">上一步</el-button>
-            <el-button type="success" @click="generateSaleAttrs">下一步：设置销售属性</el-button>
+            <el-button type="success" @click="generateSaleAttrs"
+              >下一步：设置销售属性</el-button
+            >
           </div>
         </el-card>
       </el-col>
-      <el-col :span="24" v-show="step==2">
+      <el-col :span="24" v-show="step == 2">
         <el-card class="box-card" style="width:80%;margin:20px auto">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -119,7 +136,7 @@
               <el-form ref="saleform" :model="spu">
                 <el-form-item
                   :label="attr.attrName"
-                  v-for="(attr,aidx) in dataResp.saleAttrs"
+                  v-for="(attr, aidx) in dataResp.saleAttrs"
                   :key="attr.attrId"
                 >
                   <el-input
@@ -127,11 +144,15 @@
                     type="hidden"
                     v-show="false"
                   ></el-input>
-                  <el-checkbox-group v-model="dataResp.tempSaleAttrs[aidx].attrValues">
+                  <el-checkbox-group
+                    v-model="dataResp.tempSaleAttrs[aidx].attrValues"
+                  >
                     <el-checkbox
                       v-if="dataResp.saleAttrs[aidx].valueSelect != ''"
                       :label="val"
-                      v-for="val in dataResp.saleAttrs[aidx].valueSelect.split(';')"
+                      v-for="val in dataResp.saleAttrs[aidx].valueSelect.split(
+                        ';'
+                      )"
                       :key="val"
                     ></el-checkbox>
                     <div style="margin-left:20px;display:inline">
@@ -140,11 +161,12 @@
                         class="button-new-tag"
                         size="mini"
                         @click="showInput(aidx)"
-                      >+自定义</el-button>
+                        >+自定义</el-button
+                      >
                       <el-input
                         v-show="inputVisible[aidx].view"
                         v-model="inputValue[aidx].val"
-                        :ref="'saveTagInput'+aidx"
+                        :ref="'saveTagInput' + aidx"
                         size="mini"
                         style="width:150px"
                         @keyup.enter.native="handleInputConfirm(aidx)"
@@ -156,21 +178,25 @@
               </el-form>
             </div>
             <el-button type="primary" @click="step = 1">上一步</el-button>
-            <el-button type="success" @click="generateSkus">下一步：设置SKU信息</el-button>
+            <el-button type="success" @click="generateSkus"
+              >下一步：设置SKU信息</el-button
+            >
           </el-card>
         </el-card>
       </el-col>
-      <el-col :span="24" v-show="step==3">
+      <el-col :span="24" v-show="step == 3">
         <el-card class="box-card" style="width:80%;margin:20px auto">
           <el-table :data="spu.skus" style="width: 100%">
             <el-table-column label="属性组合">
               <el-table-column
                 :label="item.attrName"
-                v-for="(item,index) in dataResp.tableAttrColumn"
+                v-for="(item, index) in dataResp.tableAttrColumn"
                 :key="item.attrId"
               >
                 <template slot-scope="scope">
-                  <span style="margin-left: 10px">{{ scope.row.attr[index].attrValue }}</span>
+                  <span style="margin-left: 10px">{{
+                    scope.row.attr[index].attrValue
+                  }}</span>
                 </template>
               </el-table-column>
             </el-table-column>
@@ -213,7 +239,7 @@
                     <el-card
                       style="width:170px;float:left;margin-left:15px;margin-top:15px;"
                       :body-style="{ padding: '0px' }"
-                      v-for="(img,index) in spu.images"
+                      v-for="(img, index) in spu.images"
                       :key="index"
                     >
                       <img :src="img" style="width:160px;height:120px" />
@@ -227,19 +253,21 @@
                             ></el-checkbox>
                           </el-col>
                           <el-col :span="12">
-                            <el-tag v-if="scope.row.images[index].defaultImg == 1">
+                            <el-tag
+                              v-if="scope.row.images[index].defaultImg == 1"
+                            >
                               <input
                                 type="radio"
                                 checked
                                 :name="scope.row.skuName"
-                                @change="checkDefaultImg(scope.row,index,img)"
+                                @change="checkDefaultImg(scope.row, index, img)"
                               />设为默认
                             </el-tag>
                             <el-tag v-else>
                               <input
                                 type="radio"
                                 :name="scope.row.skuName"
-                                @change="checkDefaultImg(scope.row,index,img)"
+                                @change="checkDefaultImg(scope.row, index, img)"
                               />设为默认
                             </el-tag>
                           </el-col>
@@ -277,7 +305,8 @@
                           v-model="scope.row.countStatus"
                           :true-label="1"
                           :false-label="0"
-                        >可叠加优惠</el-checkbox>
+                          >可叠加优惠</el-checkbox
+                        >
                       </el-form-item>
                     </el-col>
                     <el-col :span="24">
@@ -304,16 +333,23 @@
                           v-model="scope.row.priceStatus"
                           :true-label="1"
                           :false-label="0"
-                        >可叠加优惠</el-checkbox>
+                          >可叠加优惠</el-checkbox
+                        >
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="24">
-                      <el-form-item label="设置会员价" v-if="scope.row.memberPrice.length>0">
+                      <el-form-item
+                        label="设置会员价"
+                        v-if="scope.row.memberPrice.length > 0"
+                      >
                         <br />
                         <!--   @change="handlePriceChange(scope,mpidx,$event)" -->
-                        <el-form-item v-for="(mp,mpidx) in scope.row.memberPrice" :key="mp.id">
-                          {{mp.name}}
+                        <el-form-item
+                          v-for="(mp, mpidx) in scope.row.memberPrice"
+                          :key="mp.id"
+                        >
+                          {{ mp.name }}
                           <el-input-number
                             style="width:160px"
                             v-model="scope.row.memberPrice[mpidx].price"
@@ -330,10 +366,12 @@
             </el-table-column>
           </el-table>
           <el-button type="primary" @click="step = 2">上一步</el-button>
-          <el-button type="success" @click="submitSkus">下一步：保存商品信息</el-button>
+          <el-button type="success" @click="submitSkus"
+            >下一步：保存商品信息</el-button
+          >
         </el-card>
       </el-col>
-      <el-col :span="24" v-show="step==4">
+      <el-col :span="24" v-show="step == 4">
         <el-card class="box-card" style="width:80%;margin:20px auto">
           <h1>保存成功</h1>
           <el-button type="primary" @click="addAgian">继续添加</el-button>
@@ -369,7 +407,7 @@ export default {
         brandId: "",
         weight: "",
         publishStatus: 0,
-        decript: [], //商品详情
+        descript: [], //商品详情
         images: [], //商品图集，最后sku也可以新增
         bounds: {
           //积分
@@ -392,7 +430,7 @@ export default {
         brandId: [
           { required: true, message: "请选择一个品牌", trigger: "blur" }
         ],
-        decript: [
+        descript: [
           { required: true, message: "请上传商品详情图集", trigger: "blur" }
         ],
         images: [
@@ -458,13 +496,13 @@ export default {
         brandId: "",
         weight: "",
         publishStatus: 0,
-        decript: [], 
-        images: [], 
+        descript: [],
+        images: [],
         bounds: {
           buyBounds: 0,
           growBounds: 0
         },
-        baseAttrs: [], 
+        baseAttrs: [],
         skus: []
       };
     },
@@ -673,20 +711,24 @@ export default {
           method: "get",
           params: this.$http.adornParams({})
         }).then(({ data }) => {
-          //先对表单的baseAttrs进行初始化
-          data.data.forEach(item => {
-            let attrArray = [];
-            item.attrs.forEach(attr => {
-              attrArray.push({
-                attrId: attr.attrId,
-                attrValues: "",
-                showDesc: attr.showDesc
+          if (data && data.code === 0) {
+            //先对表单的baseAttrs进行初始化
+            data.data.forEach(item => {
+              let attrArray = [];
+              item.attrs.forEach(attr => {
+                attrArray.push({
+                  attrId: attr.attrId,
+                  attrValues: "",
+                  showDesc: attr.showDesc
+                });
               });
+              this.dataResp.baseAttrs.push(attrArray);
             });
-            this.dataResp.baseAttrs.push(attrArray);
-          });
-          this.dataResp.steped[0] = 0;
-          this.dataResp.attrGroups = data.data;
+            this.dataResp.steped[0] = 0;
+            this.dataResp.attrGroups = data.data;
+          }else{
+            this.$message.error(data.msg)
+          }
         });
       }
     },
@@ -705,6 +747,7 @@ export default {
             data: this.$http.adornData(this.spu, false)
           }).then(({ data }) => {
             if (data.code == 0) {
+              this.brandId="";
               this.$message({
                 type: "success",
                 message: "新增商品成功!"
@@ -803,5 +846,4 @@ export default {
   activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

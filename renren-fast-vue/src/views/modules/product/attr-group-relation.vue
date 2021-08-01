@@ -22,6 +22,7 @@
                 v-model="dataForm.key"
                 placeholder="参数名"
                 clearable
+                @clear="resetForm"
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -181,6 +182,9 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    resetForm(){
+      this.getDataList();
+    },
     selectionChangeHandle(val) {
       this.dataListSelections = val;
     },
@@ -264,6 +268,8 @@ export default {
         } else {
           this.relationAttrs = [];
         }
+      }).catch(error=>{
+        this.relationAttrs = [];
       });
     },
     dialogClose() {},
