@@ -114,7 +114,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
-      catlogPath: []
+      catalogPath: []
     };
   },
   components: {

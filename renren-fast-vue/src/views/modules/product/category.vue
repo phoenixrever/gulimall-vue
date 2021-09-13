@@ -237,8 +237,8 @@ export default {
     },
 
     remove(node, data) {
-      console.log(node);
-      if (data.children.length > 0) {
+      console.log(node,data);
+      if (node.childNodes.length > 0) {
         this.$message({
           type: "info",
           message: "有子目录无法删除"
